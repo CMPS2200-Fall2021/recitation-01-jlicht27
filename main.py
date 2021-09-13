@@ -38,14 +38,27 @@ def _binary_search(mylist, key, left, right):
 	  index of key in mylist, or -1 if not present.
 	"""
 	### TODO
-	pass
+
+	length = right - left + 1
+	if length >= 1:
+		middle = left + (right - left) // 2
+		if mylist[middle] == key:
+			return middle
+		elif key < mylist[middle]:
+			return _binary_search(mylist, key, left, middle -1)
+		elif key > mylist[middle]:
+			return _binary_search(mylist, key, middle + 1, right)
+	else:
+		return -1
 
 def test_binary_search():
 	assert binary_search([1,2,3,4,5], 5) == 4
 	assert binary_search([1,2,3,4,5], 1) == 0
 	assert binary_search([1,2,3,4,5], 6) == -1
 	### TODO: add two more tests here.
-	pass
+	assert binary_search([1,2,3,4,5,6,7,8,9,10], 9) == 8
+	assert binary_search([1,2,3,4,5,6,7,8,9,10], 7) == 6
+
 
 
 def time_search(search_fn, mylist, key):
@@ -54,27 +67,41 @@ def time_search(search_fn, mylist, key):
 	search function on this list.
 
 	Note 1: `sort_fn` parameter is a function.
-	Note 2: time.time() returns the current time in seconds. 
+	Note 2: time.time() returns the current time in seconds.
 	You'll have to multiple by 1000 to get milliseconds.
 
 	Params:
 	  sort_fn.....the search function
 	  mylist......the list to search
-	  key.........the search key 
+	  key.........the search key
 
 	Returns:
 	  the number of milliseconds it takes to run this
 	  search function on this input.
 	"""
 	### TODO
-	pass
+
+	#track time
+	start_time = time.time()
+	search_fn(mylist, key)
+	end_time = time.time()
+
+	#convert to milliseconds
+	start_time *= 1000
+	end_time *= 1000
+
+	#calculate total time
+	total_time = end_time - start_time
+
+	return total_time
+
 
 def compare_search(sizes=[1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7]):
 	"""
 	Compare the running time of linear_search and binary_search
 	for input sizes as given. The key for each search should be
 	-1. The list to search for each size contains the numbers from 0 to n-1,
-	sorted in ascending order. 
+	sorted in ascending order.
 
 	You'll use the time_search function to time each call.
 
@@ -85,7 +112,19 @@ def compare_search(sizes=[1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7]):
 	  for each method to run on each value of n
 	"""
 	### TODO
-	pass
+
+	return_list = []
+
+	for i in range(len(sizes)):
+
+		list_len = range(int(sizes[i]) - 1)
+
+		linear_time = time_search(linear_search, list_len, -1)
+		binary_time = time_search(binary_search, list_len, -1)
+		temp = (sizes[i], linear_time, binary_time)
+		return_list.append(temp)
+
+	return return_list
 
 def print_results(results):
 	""" done """
@@ -101,3 +140,5 @@ def test_compare_search():
 	assert res[1][0] == 100
 	assert res[0][1] < 1
 	assert res[1][1] < 1
+
+print_results(compare_search())
